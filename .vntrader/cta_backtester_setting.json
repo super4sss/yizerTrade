@@ -1,0 +1,11 @@
+{
+    "class_name": "VnpyTradeManager",
+    "vt_symbol": "BTCUSDT.BINANCE",
+    "interval": "1m",
+    "start": "2025-02-18",
+    "rate": 2.5e-05,
+    "slippage": 0.2,
+    "size": 300.0,
+    "pricetick": 0.2,
+    "capital": 1000000.0
+}
