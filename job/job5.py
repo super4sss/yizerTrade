@@ -31,7 +31,7 @@ import numpy as np
 # 配置基本信息
 BASE_URL = "https://www.zjzrzyjy.com"
 UNIT_DETAILS_URL = BASE_URL + "/trade/view/landbidding/queryResourceDetail?resourceId="
-PUBLICITY_URL = f"{BASE_URL}/trade/view/landbidding/querylandbidding?currentPage=6&pageSize=100&regionCode=330200%2C330201%2C330203%2C330205%2C330211%2C330206%2C330212%2C330283%2C330281%2C330282%2C330226%2C330225&sortWay=desc&sortField=ZYKSSJ"
+PUBLICITY_URL = f"{BASE_URL}/trade/view/landbidding/querylandbidding?currentPage=1&pageSize=100&landUse=1&regionCode=330200%2C330201%2C330203%2C330205%2C330211%2C330206%2C330212%2C330283%2C330281%2C330282%2C330226%2C330225&sortWay=desc&sortField=ZYKSSJ"
 USER_AGENTS = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36",
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",

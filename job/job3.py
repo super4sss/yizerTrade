@@ -43,11 +43,11 @@ TARGET_KEYWORDS = ["住宅", "办公", "厂房", "商业", "工业", "车位", "
 #     "Accept-Encoding": "gzip, deflate, br",
 # }
 COOKIES = {
-    "Hm_lvt_b33309ddse6aedc0b7a6a5e11379efd": "55048fdc8ccdde7cc81b097494237b631d7b88b3b7b320d38bca4987f33e87257ea3c7d9c0ed284586f83ee032b54d9ca7525d5c99e9af8d4258a7179c7dbff68a75d7eee825cdf6bd229954d0fbf68d98f3fd8c20440a70727d007056242e864c06b79de347d604207ba92c424c360f40cb50b8fde7a6a9524ab45050e895cffdd00fa57dddbbca4897a6a0ecfe803b2b9326b397106de82ceb4109fd11c06bd1afb1d62ccbec42914a51c85470207e",
+    "Hm_lvt_b33309ddse6aedc0b7a6a5e11379efd": "fbc6a58a1276fce1f2db6408306601e520efd648d95aac331323a8d27dfc0b68903ee5b2a7aacc0a36cb6a61b223d242696eb1829e9b9d8097da4c10f0ceeff2e3e00df00a90297314b681832d1caf63cfa0c2420047b63f6156914ac274765149109e40ffe0bbf90efbb5b213d895414fc1d52c5302dc81d714d4bac4e3dbcb083846d7f38ac9ac864255bbfe5e655f0239b542b70d0ea593b982ac4593027e4ed309d5c68177677f10a52d2da4dbb3",
 }
 COOKIES1 = [
     {"name": "Hm_lvt_b33309ddse6aedc0b7a6a5e11379efd",
-     "value": "55048fdc8ccdde7cc81b097494237b631d7b88b3b7b320d38bca4987f33e87257ea3c7d9c0ed284586f83ee032b54d9ca7525d5c99e9af8d4258a7179c7dbff68a75d7eee825cdf6bd229954d0fbf68d98f3fd8c20440a70727d007056242e864c06b79de347d604207ba92c424c360f40cb50b8fde7a6a9524ab45050e895cffdd00fa57dddbbca4897a6a0ecfe803b2b9326b397106de82ceb4109fd11c06bd1afb1d62ccbec42914a51c85470207e"}
+     "value": "fbc6a58a1276fce1f2db6408306601e520efd648d95aac331323a8d27dfc0b68903ee5b2a7aacc0a36cb6a61b223d242696eb1829e9b9d8097da4c10f0ceeff2e3e00df00a90297314b681832d1caf63cfa0c2420047b63f6156914ac274765149109e40ffe0bbf90efbb5b213d895414fc1d52c5302dc81d714d4bac4e3dbcb083846d7f38ac9ac864255bbfe5e655f0239b542b70d0ea593b982ac4593027e4ed309d5c68177677f10a52d2da4dbb3"}
 ]
 
 HEADERS = {"User-Agent": random.choice(USER_AGENTS),
@@ -93,8 +93,9 @@ def get_driver():
     """每次都创建新的 WebDriver，确保不会超时"""
     options = Options()
     options.add_argument("--headless")  # 无头模式（可选）
-    service = EdgeService("D:/2soft/edgedriver/msedgedriver.exe")  # EdgeDriver 路径
-    driver = webdriver.Edge(service=service, options=options)
+    # service = EdgeService("D:/2soft/edgedriver/msedgedriver.exe")  # EdgeDriver 路径
+    service = Service(executable_path="/home/env/chromedriver")
+    driver = webdriver.Chrome(service=service, options=options)
     return driver  # ⚠️ 关键变化：每次都返回一个新的 driver
 
 
@@ -120,7 +121,7 @@ def load_page_with_cookies(driver, url, cookies):
 
 
 # 获取许可证列表
-def get_permits(limit=1000):
+def get_permits(limit=500):
     response = requests.get(PUBLICITY_URL+str(page), headers=HEADERS, cookies=COOKIES)
     # time.sleep(1)
     response.raise_for_status()
@@ -261,7 +262,7 @@ def parse_project_details(url):
     lng = params.get("Lng", [None])[0]
     details["经度"] =lng if lng else "未知"
     details["纬度"] =lat if lat else "未知"
-
+    return details
 
     try:
         # ✅ 获取 WebDriver（只初始化一次）
@@ -432,10 +433,11 @@ def parse_property_type(url):
 
 # 获取许可信息并提取详情与实时数据
 all_data = []
-pages = 3
+pages = 12
 for page1 in range(1, pages + 1):
     page = page1
     permit_list = get_permits()[:20]
+    print(permit_list)
     for permit in permit_list:
         # 获取详情页数据
         project_details = parse_project_details(permit["详情页"])
@@ -445,8 +447,8 @@ for page1 in range(1, pages + 1):
         realdata = parse_realdata(permit["实时数据页"])
         permit.update(realdata)
         print(BASE_URL + permit["许可证href"])
-        property_type = parse_property_type(BASE_URL + permit["许可证href"])
-        permit.update(property_type)
+        # property_type = parse_property_type(BASE_URL + permit["许可证href"])
+        # permit.update(property_type)
 
     # 存入 Excel
     all_data.extend(permit_list)
